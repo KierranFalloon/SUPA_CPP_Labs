@@ -64,32 +64,35 @@ string handle_arguments(int argc, char *argv[]) {
  * 
  * @param choice The user's choice.
  * @param data The data to be processed from file
- * @return The (possibly updated, if file has been changed) data vector.
+ * @return The (possibly updated, if file has been changed) fileData structure.
  */
-vector <array<double, 2>> handle_choice(int choice, vector <array<double, 2>> &data) {
+fileData handle_choice(int choice, fileData &file) {
     
     switch (choice) {
         case 1: {
-            print_log(data);
+            print_log(file.data);
             break;
         }
         case 2: {
-            vector<float> mag_data = calculate_magnitude(data);
+            vector<float> mag_data = calculate_magnitude(file.data);
             print_log(mag_data);
+            write_file(file.filename, "mag", mag_data);
             break;
         }
         case 3: {
-            string lsf = least_squares_fit(data);
+            string lsf = least_squares_fit(file.data);
             print_log(lsf);
+            write_file(file.filename, "lsf", lsf);
             break;
         }
         case 4: {
-            vector<float> powers = custom_power(data);
+            vector<float> powers = custom_power(file.data);
             print_log(powers);
+            write_file(file.filename, "powers", powers);
             break;
         }
         case 5: {
-            data = read_file(""); // change filepath - "" signals to prompt user for input
+            fileData file = read_file(""); // change filepath - "" signals to prompt user for input
             break;
         }
         case 6: {
@@ -103,7 +106,7 @@ vector <array<double, 2>> handle_choice(int choice, vector <array<double, 2>> &d
             break;
         }
     }
-    return data;
+    return {file.filename, file.data};
 }
 
 /**

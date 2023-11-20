@@ -8,7 +8,7 @@
 
 void print_author_info();
 std::string handle_arguments(int, char**);
-std::vector<std::array<double, 2>> handle_choice(int, std::vector<std::array<double, 2>> &);
+fileData handle_choice(int, fileData&);
 int select_choice();
 
 #endif // HELPERFUNCTIONS_H

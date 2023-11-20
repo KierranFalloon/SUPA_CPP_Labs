@@ -25,11 +25,13 @@ int main(int argc, char *argv[]) {
 
     print_author_info(); // Print authorship information
     string filepath = handle_arguments(argc, argv); // handle filepath argument(s)
-    vector <array<double, 2>> data = read_file(filepath); // read file only once unless changed
+    fileData file = read_file(filepath); // Read file and store data in fileData struct
+    cout << "Log: File " << file.filename << " contains " << file.data.size() << " data points." << endl;
+    
     
     while (true) { // Loop until user exits
         int choice = select_choice();
-        data = handle_choice(choice, data);
+        file = handle_choice(choice, file);
     }
 
     return 0;
