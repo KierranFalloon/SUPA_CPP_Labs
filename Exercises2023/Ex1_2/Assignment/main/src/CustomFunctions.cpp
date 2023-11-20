@@ -155,7 +155,32 @@ string least_squares_fit(vector <array<double, 2>> data) {
     return lsf;
 }
 
+/**
+ * Calculates the power x^y for each element [xi, yi] in the given data vector.
+ * This is done using the formula x^y = e^(y*ln(x)), where y is rounded to the nearest integer.
+ *
+ * @param data The vector of arrays containing the data elements.
+ * @return A vector of floats.
+ */
+vector<float> custom_power(vector <array<double, 2>> data) {
+    float x;
+    int y;
+    int size = data.size();
 
+    auto compute_power = [](float x, int y) {
+        return exp(y * log(x));
+    };
+
+    // create new data vector
+    vector<float> x_pow_y;
+    for (int i = 0; i < size; i++) {
+        x = data[i][0];
+        y = round(data[i][1]);
+        x_pow_y.push_back(compute_power(x, y));
+    }
+
+    return x_pow_y;
+}
 
 /**
  * Prints a string to console.

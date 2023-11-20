@@ -84,10 +84,15 @@ vector <array<double, 2>> handle_choice(int choice, vector <array<double, 2>> &d
             break;
         }
         case 4: {
-            data = read_file(""); // change filepath - "" signals to prompt user for input
+            vector<float> powers = custom_power(data);
+            print_log(powers);
             break;
         }
         case 5: {
+            data = read_file(""); // change filepath - "" signals to prompt user for input
+            break;
+        }
+        case 6: {
             cout << "Exiting program.\n\n";
             exit(0);
             break;
@@ -115,8 +120,10 @@ int select_choice() {
     "\t2. Calculate magnitudes\n"
     "\t3. Fit data via Least Squares\n"
         "\t\t(with χ2 test)\n"
-    "\t4. Change file\n"
-    "\t5. Exit\n\n";
+    "\t4. Produce x^y data\n"
+        "\t\t(where y is rounded to the nearest integer)\n"
+    "\t5. Change file\n"
+    "\t6. Exit\n\n";
 
     print_log(choices_paragraph);
     cout << "Enter choice: ", cin >> choice;
