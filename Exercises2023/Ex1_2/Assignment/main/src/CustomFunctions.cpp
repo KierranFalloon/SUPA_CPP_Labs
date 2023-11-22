@@ -98,7 +98,7 @@ float chi_squared_fit(vector <array<double, 2>> data, int size, float m, float c
     int rows = data.size();
     int cols = data[0].size();
 
-    int NDF = (rows - 1) * (cols - 1);
+    int NDF = rows - cols; // ν = n − m equals the number of observations n minus the number of fitted parameters m. 
 
     fileData error_data = read_file("../../error2D_float.txt");
     const int err_size = error_data.data.size();
@@ -110,15 +110,16 @@ float chi_squared_fit(vector <array<double, 2>> data, int size, float m, float c
 
     float chi_squared = 0;
 
-    float x, y, y_err, y_fit;
+    float x, y, y_err, x_err, y_fit;
 
     for (int i = 0; i < size; i++) {
         x = data[i][0];
         y = data[i][1];
         y_err = error_data.data[i][1];
+        x_err = m*error_data.data[i][0];
         y_fit = m*x + c;
 
-        chi_squared += ( (y-y_fit)*(y-y_fit) ) / ( (y_err*y_err) );
+        chi_squared += ( (y-y_fit)*(y-y_fit) ) / ( (y_err*y_err) + (x_err*x_err) );
     }
 
     float reduced_chi_squared = chi_squared/NDF;
