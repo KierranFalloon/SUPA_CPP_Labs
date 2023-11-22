@@ -11,6 +11,7 @@
 #include <vector>
 #include <array>
 #include <cmath>
+#include <functional>
 
 using namespace std;
 
@@ -164,7 +165,7 @@ string least_squares_fit(vector <array<double, 2>> &data) {
 }
 
 /**
- * Calculates the power x^y for each element [xi, yi] in the given data vector.
+ * Calculates the power x^y for each element [xi, yi] in the given data vector using recursive calls to a function.
  * This is done using the formula x^y = e^(y*ln(x)), where y is rounded to the nearest integer.
  *
  * @param data The vector of arrays containing the data elements.
@@ -181,11 +182,18 @@ vector<float> custom_power(vector <array<double, 2>> &data) {
 
     // create new data vector
     vector<float> x_pow_y;
-    for (int i = 0; i < size; i++) {
-        x = data[i][0];
-        y = round(data[i][1]);
-        x_pow_y.push_back(compute_power(x, y));
-    }
+
+    function<void(int)> compute_recursive;
+    compute_recursive = [&](int i) {
+        if (i < size) { // stop calling function when end of data vector is reached
+            x = data[i][0];
+            y = round(data[i][1]);
+            x_pow_y.push_back(compute_power(x, y)); // add result to new data vector
+            compute_recursive(i + 1); // recursive call
+        }
+    };
+
+    compute_recursive(0); // initialise recursion
 
     return x_pow_y;
 }
