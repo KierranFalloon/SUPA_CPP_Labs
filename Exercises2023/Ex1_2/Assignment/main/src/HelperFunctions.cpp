@@ -24,10 +24,10 @@ void print_author_info() {
     "Data analysis program written by Kierran Falloon (kierran.falloon@strath.ac.uk).\n"
     "This program can read in a file of 2D data and perform some basic analysis on it.\n"
     "\nNote: Launch the program with a filepath as an argument to read in a file on launch.\n"
-    "\t\t i.e. \"./build/AnalyseData.exe ./data/data.txt\"\n"
+    "\t\t i.e. \"./build/AnalyseData.out ./data/data.txt\"\n"
     "----------------------------------------------------------------------------------------\n\n";
 
-    print_log(paragraph);
+    cout << paragraph << endl;
 }
 
 /**
@@ -37,21 +37,25 @@ void print_author_info() {
  */
 string handle_arguments(int argc, char *argv[]) {
     string filepath;
+    string print_string;
         switch (argc) {
         case 1: {
             break;
         }
         case 2: {
-            cout << "Filepath = " << argv[1] << "\n" << endl;
+            print_string = "Filepath = " + string(argv[1]) + "\n";
+            print_log(print_string, false);
             filepath = argv[1];
             break;
         }
         default: {
-            cerr << "Ignoring extra args: " << endl;
+            string error = "Ignoring extra args: \n";
             for (int i = 2; i < argc; i++) {
-                cerr << "Arg " << i << " = " << argv[i] << endl;
-        }
-            cout << "Filepath = " << argv[1] << "\n" << endl;
+                error += "\t" + string(argv[i]) + "\n";
+            }
+            print_log(error, true);
+            print_string = "Filepath = " + string(argv[1]) + "\n";
+            print_log(print_string, false);
             filepath = argv[1];
             break;
         }
@@ -68,6 +72,7 @@ string handle_arguments(int argc, char *argv[]) {
  */
 fileData handle_choice(int choice, fileData &file) {
     
+    string print_string;
     switch (choice) {
         case 1: {
             print_log(file.data);
@@ -81,7 +86,7 @@ fileData handle_choice(int choice, fileData &file) {
         }
         case 3: {
             string lsf = least_squares_fit(file.data);
-            print_log(lsf);
+            print_log(lsf, false);
             write_file(file.filename, "lsf", lsf);
             break;
         }
@@ -96,12 +101,14 @@ fileData handle_choice(int choice, fileData &file) {
             break;
         }
         case 6: {
-            cout << "Exiting program.\n\n";
+            print_string = "Exiting program.\n";
+            print_log(print_string, false);
             exit(0);
             break;
         }
         default: {
-            cerr << "Error: Invalid choice.\n\n";
+            print_string = "Invalid choice. Exiting program.\n";
+            print_log(print_string, true);
             exit(1);
             break;
         }
@@ -128,9 +135,9 @@ int select_choice() {
     "\t5. Change file\n"
     "\t6. Exit\n\n";
 
-    print_log(choices_paragraph);
-    cout << "Enter choice: ", cin >> choice;
-    cout << endl;
+    print_log(choices_paragraph, false);
+    string message = "Enter choice (1-6): ";
+    choice = request_int(message);
 
     return choice;
 }

@@ -15,6 +15,108 @@
 
 using namespace std;
 
+/**
+ * @brief Requests user input for a string value.
+ * @param prompt The prompt message to display to the user.
+ * @return The string value entered by the user.
+ */
+string request_string(string prompt) {
+    string input;
+    cout << prompt, cin >> input;
+    return input;
+}
+
+/**
+ * @brief Requests user input for a string value.
+ * @param prompt The prompt message to display to the user.
+ * @return The integer value entered by the user.
+ * @overload request_string(string prompt)
+ */
+int request_int(string prompt) {
+    int input;
+    cout << prompt, cin >> input;
+    return input;
+}
+
+/**
+ * @brief Prints the log message to the console.
+ * @param log The log message to be printed.
+ * @param error Indicates whether the log is an error message or not.
+ */
+void print_log(string &log, bool error) {
+    if (error) {
+        cerr << "Error: " << log << endl;
+        cerr << endl;
+    } else {
+        cout << "Log: " << log << endl;
+        cout << endl;
+    }
+}
+
+/**
+ * @brief Prints a float to console.
+ * @param log The float value to be printed.
+ * @overload print_log(string &log)
+ */
+void print_log(float &log) {
+    cout << "Log: " << log << endl;
+    cout << endl;
+}
+
+/**
+ * @brief Prints a specified number of lines from a vector of float values to console.
+ * @param log_vec The vector of arrays containing the data to be printed.
+ * @overload print_log(string &log)
+ */
+void print_log(vector<float> &log_vec) {
+    const int size = log_vec.size();
+    int n;
+    string print_string = "Enter number of lines to print out of " + to_string(size) + ": ";
+    n = request_int(print_string);
+
+    if (n == 0) {
+        return;
+    }
+
+    if (n > size) {
+        print_string = "Error: n is greater than the number of lines (" + to_string(size) + ") in the file.\nDefaulting to 5 lines.\n\n";
+        print_log(print_string, true);
+        n = 5;
+    }
+
+    for (int i = 0; i < n; i++) {
+        cout << "Line " << i+1 << ": " << log_vec[i] << endl;
+    }
+    cout << endl;
+}
+
+/**
+ * @brief Prints a specified number of lines from a vector of arrays to console.
+ * @param log_vec The vector of arrays containing the data to be printed.
+ * @overload print_log(string &log)
+ */
+void print_log(vector<array<double,2>> &log_vec) {
+    const int size = log_vec.size();
+    int n;
+    string print_string = "Enter number of lines to print out of " + to_string(size) + ": ";
+    n = request_int(print_string);
+
+    if (n == 0) {
+        return;
+    }
+
+    if (n > size) {
+        print_string = "Error: n is greater than the number of lines (" + to_string(size) + ") in the file.\nDefaulting to 5 lines.\n\n";
+        print_log(print_string, true);
+        n = 5;
+    }
+
+    for (int i = 0; i < n; i++) {
+        cout << "Line " << i+1 << ": " << log_vec[i][0] << ", " << log_vec[i][1] << endl;
+    }
+    cout << endl;
+}
+
 struct fileData {
     string filename;
     vector <array<double, 2>> data;
@@ -29,18 +131,23 @@ struct fileData {
  */
 fileData read_file(string filepath){
 
+    string print_string;
+
     if (filepath == "") { // If filepath is empty, prompt user for input
-        cout << "Enter filepath: ", cin >> filepath;
+        print_string = "Enter filepath: ";
+        filepath = request_string(print_string);
     }
 
     ifstream file; // Open file
     file.open(filepath);
 
     if (file.fail() || !file.is_open()) {
-        cerr << "Error: Could not open file " << filepath << endl;
+        print_string = "Could not open file " + filepath + "\n";
+        print_log(print_string, true);
         exit(1);
     } else {
-        cout << "Log: File " << filepath << " opened successfully." << endl;
+        print_string = "File " + filepath + " opened successfully.\n";
+        print_log(print_string, false);
     }
 
     vector <array<double, 2>> data; // File data: dynamic data structure of form [ [ x, y ], [ x, y ], ... ]
@@ -61,7 +168,8 @@ fileData read_file(string filepath){
             data.push_back(xy); // add to data vector
         }
     }
-    cout << "Log: File read successfully.\n\n" << endl;
+    print_string = "File " + filepath + " read successfully.\n";
+    print_log(print_string, false);
 
     return {filepath, data};
 }
@@ -80,7 +188,7 @@ vector<float> calculate_magnitude(vector <array<double, 2>> &data) {
         double mag = sqrt(data[i][0]*data[i][0] + data[i][1]*data[i][1]);
         mag_data.push_back(mag);
     }
-    cout << endl; // extra line for readability
+
     return mag_data;
 }
 
@@ -105,7 +213,8 @@ float chi_squared_fit(vector <array<double, 2>> data, int size, float m, float c
     const int err_size = error_data.data.size();
 
     if (size != err_size) {
-        cerr << "Error: Size of data and error data vectors do not match." << endl;
+        string error = "Size of data and error data vectors do not match.";
+        print_log(error, true);
         exit(1);
     }
 
@@ -199,86 +308,6 @@ vector<float> custom_power(vector <array<double, 2>> &data) {
 }
 
 /**
- * Prints a string to console.
- * 
- * @param data The string to be printed.
- */
-void print_log(string &log) {
-    cout << log << endl;
-    cout << endl;
-}
-
-/**
- * Prints a string to console.
- * 
- * @param data The float value to be printed.
- * 
- * @overload print_log(string &log)
- */
-void print_log(float &log) {
-    cout << log << endl;
-    cout << endl;
-}
-
-/**
- * Prints a specified number of lines from a vector of float values to console.
- * 
- * @param data The vector of arrays containing the data to be printed.
- * 
- * @overload print_log(string &log)
- */
-void print_log(vector<float> &log_vec) {
-    const int size = log_vec.size();
-    int n;
-    cout << "Enter number of lines to print out of " << size <<": ", cin >> n;
-    cout << endl;
-
-    if (n == 0) {
-        return;
-    }
-
-    if (n > size) {
-        cerr << "\nError: n is greater than the number of lines ("<< size <<") in the file." << endl;
-        cerr << "Defaulting to 5 lines.\n\n";
-        n = 5;
-    }
-
-    for (int i = 0; i < n; i++) {
-        cout << "Line " << i+1 << ": " << log_vec[i] << endl;
-    }
-    cout << endl;
-}
-
-/**
- * Prints a specified number of lines from a vector of arrays to console.
- * 
- * @param log_vec The vector of arrays containing the data to be printed.
- * 
- * @overload print_log(string &log)
- */
-void print_log(vector<array<double,2>> &log_vec) {
-    const int size = log_vec.size();
-    int n;
-    cout << "Enter number of lines to print out of " << size <<": ", cin >> n;
-    cout << endl;
-
-    if (n == 0) {
-        return;
-    }
-
-    if (n > size) {
-        cerr << "\nError: n is greater than the number of lines ("<< size <<") in the file." << endl;
-        cerr << "Defaulting to 5 lines.\n\n";
-        n = 5;
-    }
-
-    for (int i = 0; i < n; i++) {
-        cout << "Line " << i+1 << ": " << log_vec[i][0] << ", " << log_vec[i][1] << endl;
-    }
-    cout << endl;
-}
-
-/**
  * @brief Removes the file extension from a given filename.
  * 
  * @param filename The filename from which to remove the extension.
@@ -310,8 +339,8 @@ void write_file(string filename, string extension, string data) {
     myfile << data;
     myfile.close();
 
-    string success_msg = "Log: File " + out_file + " written successfully.\n";
-    print_log(success_msg);
+    string success_msg = "File " + out_file + " written successfully.\n";
+    print_log(success_msg, false);
 }
 
 /**
@@ -338,6 +367,6 @@ void write_file(string filename, string extension, vector<float> &data) {
     }
     myfile.close();
 
-    string success_msg = "Log: File " + out_file + " written successfully.\n";
-    print_log(success_msg);
+    string success_msg = "File " + out_file + " written successfully.\n";
+    print_log(success_msg, false);
 }
