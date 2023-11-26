@@ -214,7 +214,26 @@ float chi_squared_fit(vector <array<double, 2>> data, int size, float m, float c
 
     int NDF = rows - cols; // ν = n − m equals the number of observations n minus the number of fitted parameters m. 
 
-    fileData error_data = read_file("../../error2D_float.txt");
+    string message = "Number of degrees of freedom (ν) = " + to_string(NDF);
+    print_log(message, false);
+
+    // Prompt user for error data for extra generality
+    message = "Default error file format is ../../error2D_float.txt.\n\tCustom error data? (y/n): ";
+    string choice = request_string(message);
+    string error_file = "../../error2D_float.txt";
+
+    if (choice == "y" || choice == "Y" || choice == "yes" || choice == "Yes") {
+        message = "Enter filepath for error data: ";
+        error_file = request_string(message);
+    } else if (choice == "n" || choice == "N" || choice == "no" || choice == "No") {
+        message = "Defaulting error data.";
+        print_log(message, false);
+    } else {
+        message = "Invalid choice. Defaulting error data.";
+        print_log(message, true);
+    }
+
+    fileData error_data = read_file(error_file); // read error data file
     const int err_size = error_data.data.size();
 
     if (size != err_size) {
@@ -269,11 +288,11 @@ string least_squares_fit(vector <array<double, 2>> &data) {
     string lsf = "y = " + to_string(m) + "x + " + to_string(c);
     string lsf_file_format = 
         "Least Squares Fit:\n"
-        "" + lsf + "\n\n"
+        "\t" + lsf + "\n\n"
         "Reduced χ2 (chi-squared) = " + to_string(chi) + "\n\n"
         "Fit parameters:\n"
-        "m = " + to_string(m) + "\n"
-        "c = " + to_string(c); // format string for file output
+        "\tm = " + to_string(m) + "\n"
+        "\tc = " + to_string(c); // format string for file output
 
     return lsf_file_format; // return string
 }
