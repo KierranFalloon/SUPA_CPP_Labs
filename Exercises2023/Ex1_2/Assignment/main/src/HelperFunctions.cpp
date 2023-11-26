@@ -2,7 +2,7 @@
  * @file HelperFunctions.cpp
  * @author Kierran Falloon (kierran.falloon@strath.ac.uk)
  * @version 1.0
- * @date 25-11-2023
+ * @date 26-11-2023
  * @headerfile HelperFunctions.h
  */
 
@@ -24,7 +24,7 @@ void print_author_info() {
     "Data analysis program written by Kierran Falloon (kierran.falloon@strath.ac.uk).\n"
     "This program can read in a file of 2D data and perform some basic analysis on it.\n"
     "\nNote: Launch the program with a filepath as an argument to read in a file on launch.\n"
-    "\t\t i.e. \"./build/AnalyseData.out ./data/data.txt\"\n"
+    "\t\t i.e. \"./build/AnalyseData.out ../../input2D_float.txt\"\n"
     "----------------------------------------------------------------------------------------\n\n";
 
     cout << paragraph << endl;
@@ -38,23 +38,23 @@ void print_author_info() {
 string handle_arguments(int argc, char *argv[]) {
     string filepath;
     string print_string;
-        switch (argc) {
+        switch (argc) { 
         case 1: {
-            break;
+            break; // No args passed, since argv[0] is the program name
         }
         case 2: {
-            print_string = "Filepath = " + string(argv[1]) + "\n";
+            print_string = "Filepath = " + string(argv[1]); 
             print_log(print_string, false);
-            filepath = argv[1];
+            filepath = argv[1]; // argv[1] is the filepath
             break;
         }
         default: {
-            string error = "Ignoring extra args: \n";
+            string error = "Ignoring extra args: \n"; // More than one argument passed
             for (int i = 2; i < argc; i++) {
                 error += "\t" + string(argv[i]) + "\n";
             }
             print_log(error, true);
-            print_string = "Filepath = " + string(argv[1]) + "\n";
+            print_string = "Filepath = " + string(argv[1]);
             print_log(print_string, false);
             filepath = argv[1];
             break;
@@ -101,15 +101,14 @@ fileData handle_choice(int choice, fileData &file) {
             break;
         }
         case 6: {
-            print_string = "Exiting program.\n";
+            print_string = "Exiting program.";
             print_log(print_string, false);
             exit(0);
             break;
         }
         default: {
-            print_string = "Invalid choice. Exiting program.\n";
+            print_string = "Invalid choice. Please try again.";
             print_log(print_string, true);
-            exit(1);
             break;
         }
     }

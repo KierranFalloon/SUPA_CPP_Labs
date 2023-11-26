@@ -2,7 +2,7 @@
  * @file CustomFunctions.cpp
  * @author Kierran Falloon (kierran.falloon@strath.ac.uk)
  * @version 1.0
- * @date 25-11-2023
+ * @date 26-11-2023
  * @headerfile CustomFunctions.h
  */
 
@@ -46,10 +46,10 @@ int request_int(string prompt) {
 void print_log(string &log, bool error) {
     if (error) {
         cerr << "Error: " << log << endl;
-        cerr << endl;
+        cerr << endl; 
     } else {
         cout << "Log: " << log << endl;
-        cout << endl;
+        cout << endl; // new line for readability
     }
 }
 
@@ -79,7 +79,7 @@ void print_log(vector<float> &log_vec) {
     }
 
     if (n > size) {
-        print_string = "Error: n is greater than the number of lines (" + to_string(size) + ") in the file.\nDefaulting to 5 lines.\n\n";
+        print_string = "n (" + to_string(n) + ") is greater than the number of lines (" + to_string(size) + ") in the file.\nDefaulting to 5 lines.";
         print_log(print_string, true);
         n = 5;
     }
@@ -106,7 +106,7 @@ void print_log(vector<array<double,2>> &log_vec) {
     }
 
     if (n > size) {
-        print_string = "Error: n is greater than the number of lines (" + to_string(size) + ") in the file.\nDefaulting to 5 lines.\n\n";
+        print_string = "n (" + to_string(n) + ") is greater than the number of lines (" + to_string(size) + ") in the file.\nDefaulting to 5 lines.";
         print_log(print_string, true);
         n = 5;
     }
@@ -117,9 +117,9 @@ void print_log(vector<array<double,2>> &log_vec) {
     cout << endl;
 }
 
-struct fileData {
-    string filename;
-    vector <array<double, 2>> data;
+struct fileData { // Struct to store file data
+    string filename; // File name for dynamically naming output files
+    vector <array<double, 2>> data; // File data: dynamic data structure of form [ [ x, y ], [ x, y ], ... ]
 };
 
 /**
@@ -138,22 +138,22 @@ fileData read_file(string filepath){
         filepath = request_string(print_string);
     }
 
-    ifstream file; // Open file
-    file.open(filepath);
+    ifstream inputfile; // Open file
+    inputfile.open(filepath);
 
-    if (file.fail() || !file.is_open()) {
-        print_string = "Could not open file " + filepath + "\n";
+    if (inputfile.fail() || !inputfile.is_open()) {
+        print_string = "Could not open file " + filepath + "";
         print_log(print_string, true);
         exit(1);
     } else {
-        print_string = "File " + filepath + " opened successfully.\n";
+        print_string = "File " + filepath + " opened successfully.";
         print_log(print_string, false);
     }
 
     vector <array<double, 2>> data; // File data: dynamic data structure of form [ [ x, y ], [ x, y ], ... ]
     string line;
 
-    while (getline(file, line)) {
+    while (getline(inputfile, line)) {
         if (line == "x,y") {
             continue; // Ignore header
         } else {
@@ -168,7 +168,12 @@ fileData read_file(string filepath){
             data.push_back(xy); // add to data vector
         }
     }
-    print_string = "File " + filepath + " read successfully.\n";
+    inputfile.close(); // Close file
+
+    print_string = "File " + filepath + " read successfully.";
+    print_log(print_string, false);
+
+    print_string = "Number of lines read: " + to_string(data.size()) + "\n";
     print_log(print_string, false);
 
     return {filepath, data};
@@ -185,8 +190,8 @@ vector<float> calculate_magnitude(vector <array<double, 2>> &data) {
     vector<float> mag_data;
 
     for (int i = 0; i < size; i++) {
-        double mag = sqrt(data[i][0]*data[i][0] + data[i][1]*data[i][1]);
-        mag_data.push_back(mag);
+        double mag = sqrt(data[i][0]*data[i][0] + data[i][1]*data[i][1]); // magnitude = sqrt(x^2 + y^2)
+        mag_data.push_back(mag); // add to new data vector
     }
 
     return mag_data;
@@ -204,8 +209,8 @@ vector<float> calculate_magnitude(vector <array<double, 2>> &data) {
  */
 float chi_squared_fit(vector <array<double, 2>> data, int size, float m, float c) {
 
-    int rows = data.size();
-    int cols = data[0].size();
+    int rows = data.size(); // number of rows in data vector
+    int cols = data[0].size(); // number of columns in data vector
 
     int NDF = rows - cols; // ν = n − m equals the number of observations n minus the number of fitted parameters m. 
 
@@ -218,21 +223,21 @@ float chi_squared_fit(vector <array<double, 2>> data, int size, float m, float c
         exit(1);
     }
 
-    float chi_squared = 0;
+    float chi_squared = 0; // initialise chi-squared value
 
-    float x, y, y_err, x_err, y_fit;
+    float x, y, y_err, x_err, y_fit; // initialise variables
 
-    for (int i = 0; i < size; i++) {
-        x = data[i][0];
-        y = data[i][1];
-        y_err = error_data.data[i][1];
+    for (int i = 0; i < size; i++) { // loop through data vector
+        x = data[i][0]; 
+        y = data[i][1]; 
+        y_err = error_data.data[i][1]; 
         x_err = m*error_data.data[i][0];
         y_fit = m*x + c;
 
-        chi_squared += ( (y-y_fit)*(y-y_fit) ) / ( (y_err*y_err) + (x_err*x_err) );
+        chi_squared += ( (y-y_fit)*(y-y_fit) ) / ( (y_err*y_err) + (x_err*x_err) ); // calculate chi-squared value
     }
 
-    float reduced_chi_squared = chi_squared/NDF;
+    float reduced_chi_squared = chi_squared/NDF; // calculate reduced chi-squared value
 
     return reduced_chi_squared;
 }
@@ -247,19 +252,19 @@ float chi_squared_fit(vector <array<double, 2>> data, int size, float m, float c
 string least_squares_fit(vector <array<double, 2>> &data) {
     
     int size = data.size();
-    double sum_x, sum_y, sum_x_y, sum_x_squared = 0;
+    double sum_x, sum_y, sum_x_y, sum_x_squared = 0; // initialise variables
 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) { // loop through data vector
         sum_x += data[i][0];
         sum_y += data[i][1];
         sum_x_y += data[i][0]*data[i][1];
         sum_x_squared += data[i][0]*data[i][0];
     }
 
-    float m = (size*sum_x_y - sum_x*sum_y) / (size*sum_x_squared - sum_x*sum_x);
-    float c = (sum_y - m*sum_x) / size;
+    float m = (size*sum_x_y - sum_x*sum_y) / (size*sum_x_squared - sum_x*sum_x); // calculate gradient
+    float c = (sum_y - m*sum_x) / size; // calculate y-intercept
 
-    float chi = chi_squared_fit(data, size, m, c);
+    float chi = chi_squared_fit(data, size, m, c); // calculate reduced chi-squared value
 
     string lsf = "y = " + to_string(m) + "x + " + to_string(c);
     string lsf_file_format = 
@@ -268,9 +273,9 @@ string least_squares_fit(vector <array<double, 2>> &data) {
         "Reduced χ2 (chi-squared) = " + to_string(chi) + "\n\n"
         "Fit parameters:\n"
         "m = " + to_string(m) + "\n"
-        "c = " + to_string(c) + "\n";
+        "c = " + to_string(c); // format string for file output
 
-    return lsf_file_format;
+    return lsf_file_format; // return string
 }
 
 /**
@@ -286,7 +291,7 @@ vector<float> custom_power(vector <array<double, 2>> &data) {
     const int size = data.size();
 
     auto compute_power = [](float x, int y) {
-        return exp(y * log(x));
+        return exp(y * log(x)); // x^y => ln(x^y) => y*ln(x) => e^(y*ln(x))
     };
 
     // create new data vector
@@ -317,7 +322,7 @@ string remove_extension(string filename) {
     size_t last_dot = filename.rfind(".");
     if (last_dot == string::npos) // No dot found
         return filename;
-    return filename.substr(0, last_dot);
+    return filename.substr(0, last_dot); // Return filename without extension
 };
 
 /**
@@ -331,15 +336,15 @@ string remove_extension(string filename) {
  */
 void write_file(string filename, string extension, string data) {
 
-    string filename_path = remove_extension(filename);
-    string out_file = filename_path + "_" + extension + ".txt";
+    string filename_path = remove_extension(filename); // remove extension from filename
+    string out_file = filename_path + "_" + extension + ".txt"; // append new extension to filename
 
-    ofstream myfile;
-    myfile.open(out_file);
-    myfile << data;
-    myfile.close();
+    ofstream outfile;
+    outfile.open(out_file); // open file
+    outfile << data; // write data to file
+    outfile.close(); // close file
 
-    string success_msg = "File " + out_file + " written successfully.\n";
+    string success_msg = "File " + out_file + " written successfully.";
     print_log(success_msg, false);
 }
 
@@ -359,14 +364,14 @@ void write_file(string filename, string extension, vector<float> &data) {
     string filename_path = remove_extension(filename);
     string out_file = filename_path + "_" + extension + ".txt";
 
-    ofstream myfile;
-    myfile.open(out_file);
-    myfile << extension << endl;
+    ofstream outfile;
+    outfile.open(out_file);
+    outfile << extension << endl;
     for (int i = 0; i < size; i++) {
-        myfile << data[i] << endl;
+        outfile << data[i] << endl;
     }
-    myfile.close();
+    outfile.close();
 
-    string success_msg = "File " + out_file + " written successfully.\n";
+    string success_msg = "File " + out_file + " written successfully.";
     print_log(success_msg, false);
 }

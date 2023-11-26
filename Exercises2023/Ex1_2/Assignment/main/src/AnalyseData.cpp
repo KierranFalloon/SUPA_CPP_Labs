@@ -15,7 +15,8 @@
 using namespace std;
 
 /**
- * @brief Main function. Called via ./AnalyseData.out [args]
+ * @brief Main function. Called via ./AnalyseData.out [args].
+ * Accepted args are a filepath to a data file with 2D data delimited by spaces.
  * 
  * @param argc The number of arguments passed to the program.
  * @param argv The arguments passed to the program.
@@ -26,13 +27,13 @@ int main(int argc, char *argv[]) {
     print_author_info(); // Print authorship information
     string filepath = handle_arguments(argc, argv); // handle filepath argument(s)
     fileData file = read_file(filepath); // Read file and store data in fileData struct
-    cout << "Log: File " << file.filename << " contains " << file.data.size() << " data points." << endl;
     
-    
-    while (true) { // Loop until user exits
+    bool program_loop = true;
+    while (program_loop) { // Loop until user exits
         int choice = select_choice();
         file = handle_choice(choice, file);
     }
+    program_loop = false;
 
     return 0;
 }
