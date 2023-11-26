@@ -16,29 +16,6 @@
 using namespace std;
 
 /**
- * @brief Requests user input for a string value.
- * @param prompt The prompt message to display to the user.
- * @return The string value entered by the user.
- */
-string request_string(string prompt) {
-    string input;
-    cout << prompt, cin >> input;
-    return input;
-}
-
-/**
- * @brief Requests user input for a string value.
- * @param prompt The prompt message to display to the user.
- * @return The integer value entered by the user.
- * @overload request_string(string prompt)
- */
-int request_int(string prompt) {
-    int input;
-    cout << prompt, cin >> input;
-    return input;
-}
-
-/**
  * @brief Prints the log message to the console.
  * @param log The log message to be printed.
  * @param error Indicates whether the log is an error message or not.
@@ -51,6 +28,43 @@ void print_log(string &log, bool error) {
         cout << "Log: " << log << endl;
         cout << endl; // new line for readability
     }
+}
+
+/**
+ * @brief Requests user input for a string value.
+ * @param prompt The prompt message to display to the user.
+ * @return The string value entered by the user.
+ */
+string request_string(string prompt) {
+    string input;
+    cout << prompt, cin >> input;
+    if (cin.fail()) { // robustify input
+        string error = "Invalid input. Please enter a valid string.";
+        print_log(error, true);
+        cin.clear();
+        cin.ignore(10000, '\n');
+        input = request_string(prompt);
+    }
+    return input;
+}
+
+/**
+ * @brief Requests user input for a string value.
+ * @param prompt The prompt message to display to the user.
+ * @return The integer value entered by the user.
+ * @overload request_string(string prompt)
+ */
+int request_int(string prompt) {
+    int input;
+    cout << prompt, cin >> input;
+    if (cin.fail()) { // robustify input
+        string error = "Invalid input. Please enter an integer.";
+        print_log(error, true);
+        cin.clear();
+        cin.ignore(10000, '\n');
+        input = request_int(prompt);
+    }
+    return input;
 }
 
 /**
