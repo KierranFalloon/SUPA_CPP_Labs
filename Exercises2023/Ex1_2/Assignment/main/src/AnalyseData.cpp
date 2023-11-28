@@ -30,10 +30,10 @@ int main(int argc, char *argv[]) {
     
     bool program_loop = true;
     while (program_loop) { // Loop until user exits
-        int choice = select_choice();
-        file = handle_choice(choice, file);
+        int choice = select_choice(); // Select choice from menu
+        file = handle_choice(choice, file); // Handle choice
     }
-    program_loop = false;
+    program_loop = false; // Exit program
 
     return 0;
 }

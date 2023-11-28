@@ -74,45 +74,45 @@ fileData handle_choice(int choice, fileData &file) {
     
     string print_string;
     switch (choice) {
-        case 1: {
+        case 1: { // print lines from file
             print_log(file.data);
             break;
         }
-        case 2: {
-            vector<float> mag_data = calculate_magnitude(file.data);
+        case 2: { // calculate magnitudes
+            vector<float> mag_data = calculate_magnitude(file.data); 
             print_log(mag_data);
             write_file(file.filename, "mag", mag_data);
             break;
         }
-        case 3: {
+        case 3: { // fit data via least squares
             string lsf = least_squares_fit(file.data);
             print_log(lsf, false);
             write_file(file.filename, "lsf", lsf);
             break;
         }
-        case 4: {
+        case 4: { // produce x^y data
             vector<float> powers = custom_power(file.data);
             print_log(powers);
             write_file(file.filename, "powers", powers);
             break;
         }
-        case 5: {
+        case 5: { // change file
             fileData file = read_file(""); // change filepath - "" signals to prompt user for input
             break;
         }
-        case 6: {
-            print_string = "Exiting program.";
+        case 6: { // exit
+            print_string = "Exiting program."; 
             print_log(print_string, false);
             exit(0);
             break;
         }
-        default: {
+        default: { // invalid choice
             print_string = "Invalid choice. Please try again.";
             print_log(print_string, true);
             break;
         }
     }
-    return {file.filename, file.data};
+    return {file.filename, file.data}; // return updated fileData structure
 }
 
 /**
@@ -136,7 +136,7 @@ int select_choice() {
 
     print_log(choices_paragraph, false);
     string message = "Enter choice (1-6): ";
-    choice = request_int(message);
+    choice = request_int(message); // request user input
 
     return choice;
 }
