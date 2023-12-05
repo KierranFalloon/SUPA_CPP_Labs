@@ -58,12 +58,28 @@ double FiniteFunction::callFunction(double x) {return this->invxsquared(x);}; //
 
 /*
 ###################
-Integration by hand (output needed to normalise function when plotting)
+Integration by hand using Simpson's rule
 ###################
-*/ 
-double FiniteFunction::integrate(int Ndiv){ //private
-  //ToDo write an integrator
-  return -99;  
+*/
+double FiniteFunction::integrate(int Ndiv){ // private
+  double h = (m_RMax - m_RMin)/Ndiv; // determine x steps from overall range and number of divisions
+  double integral = 0; // initialise integral as 0
+  double S_zero, S_one, S_two; // Simpson's rule: I = h/3*(S0 + 4S1 + 2S2)
+
+  for (int n = 0; n <= Ndiv; n++){ // loop over divisions
+    double x = m_RMin + n*h; // x value
+    double fx = this->callFunction(x); // f(x_n)
+
+    if (n == 0 || n == Ndiv) 
+      S_zero += fx; // S0 = f(0) + f(Ndiv)
+    else if (n % 2 != 0) 
+      S_one += fx; // S1 = Σf(x_n) for odd n
+    else
+      S_two += fx; // S2 = Σf(x_n) for even n
+  }
+
+  integral = (h/3) * (S_zero + 4*S_one + 2*S_two);
+  return integral; // sum of parabolic areas approximating integral. large Ndiv = decreased error.
 }
 double FiniteFunction::integral(int Ndiv) { //public
   if (Ndiv <= 0){
