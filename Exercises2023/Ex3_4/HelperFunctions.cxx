@@ -1,7 +1,6 @@
 /**
  * @file HelperFunctions.cxx
  * @author Kierran Falloon (kierran.falloon@strath.ac.uk)
- * @version 1.0
  * @date 5-12-2023
  */
 

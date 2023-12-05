@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include "HelperFunctions.h"
+#include "CustomFunctions.h"
 
 int main()
 {
