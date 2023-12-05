@@ -20,7 +20,7 @@ int main()
     float min = min_max[0];
     float max = min_max[1];
 
-    FiniteFunction function(min, max, "Outputs/data/Inv_X_Squared.png");
+    FiniteFunction function(min, max, "Outputs/png/Inv_X_Squared.png");
     // Plot function
     function.plotFunction();
     // Plot data
@@ -28,10 +28,17 @@ int main()
     // Print info
     function.printInfo();
 
-    NormalDistributionFunction normalFunc(min, max, "Outputs/data/1/Normal.png", 2.0, 1.5);
+    sleep(2);
+    NormalDistributionFunction normalFunc(min, max, "Outputs/png/Normal.png", 2.0, 1.5);
     normalFunc.plotFunction();
     normalFunc.plotData(data, 50, true);
     normalFunc.printInfo();
+
+    sleep(2);
+    CauchyLorentzDistribution cauchyFunc(min, max, "Outputs/png/Cauchy-Lorentz.png", 2.0, 1.5);
+    cauchyFunc.plotFunction();
+    cauchyFunc.plotData(data, 50, true);
+    cauchyFunc.printInfo();
 
     return 0;
 }

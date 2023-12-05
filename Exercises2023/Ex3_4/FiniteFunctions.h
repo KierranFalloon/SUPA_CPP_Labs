@@ -65,3 +65,21 @@ private:
   double m_sigma;
   double normal(double x, double mu, double sigma);
 };
+
+class CauchyLorentzDistribution : public FiniteFunction{
+
+public:
+  CauchyLorentzDistribution(); //Empty constructor
+  CauchyLorentzDistribution(double range_min, double range_max, std::string outfile, double x0=0.0, double gamma=1.0); //Variable constructor
+  double x0(); // Center
+  double gamma(); //Scale parameter of the distribution
+  void setx0(double x0);
+  void setGamma(double gamma);
+  virtual void printInfo(); //Dump parameter info about the current function
+  virtual double callFunction(double x); //Call the function with value x
+
+private:
+  double m_x0;
+  double m_gamma;
+  double cauchy(double x, double gamma);
+};

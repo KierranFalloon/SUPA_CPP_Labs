@@ -315,3 +315,69 @@ void NormalDistributionFunction::printInfo() {
     std::cout << "mu: " << m_mu << std::endl;
     std::cout << "sigma: " << m_sigma << std::endl;
 };
+
+/*
+###################
+//Cauchy-Lorentz Distribution Function
+###################
+*/
+
+//Empty constructor
+CauchyLorentzDistribution::CauchyLorentzDistribution() {
+    m_x0 = 0.0;
+    m_gamma = 1.0;
+}
+
+//Initialised constructor
+CauchyLorentzDistribution::CauchyLorentzDistribution(double range_min, double range_max, std::string outfile, double x0, double gamma) {
+    m_x0 = x0;
+    m_gamma = gamma;
+    m_RMin = range_min;
+    m_RMax = range_max;
+    m_Integral = NULL;
+    this->checkPath(outfile);
+
+    if (m_gamma == 0) {m_gamma = 1.0;};
+}
+
+/*
+###################
+//Setters
+###################
+*/
+void CauchyLorentzDistribution::setx0(double x0) {m_x0 = x0;};
+void CauchyLorentzDistribution::setGamma(double gamma) {m_gamma = gamma;};
+
+/*
+###################
+//Getters
+###################
+*/
+double CauchyLorentzDistribution::x0() {return m_x0;};
+double CauchyLorentzDistribution::gamma() {return m_gamma;};
+
+/*
+###################
+//Function eval
+###################
+*/
+double CauchyLorentzDistribution::cauchy(double x, double gamma) {
+    return 1/( (M_PI*gamma) * 1+pow((x-m_x0)/gamma, 2));
+}
+double CauchyLorentzDistribution::callFunction(double x) {return this->cauchy(x, m_gamma);};
+
+/*
+###################
+//Helper functions
+###################
+*/
+//Print
+void CauchyLorentzDistribution::printInfo() {
+    std::cout << std::endl;
+    std::cout << "rangeMin: " << m_RMin << std::endl;
+    std::cout << "rangeMax: " << m_RMax << std::endl;
+    std::cout << "integral: " << m_Integral << ", calculated using " << m_IntDiv << " divisions" << std::endl;
+    std::cout << "function: " << m_FunctionName << std::endl;
+    std::cout << "x0: " << m_x0 << std::endl;
+    std::cout << "gamma: " << m_gamma << std::endl;
+};
