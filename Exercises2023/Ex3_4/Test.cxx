@@ -20,13 +20,18 @@ int main()
     float min = min_max[0];
     float max = min_max[1];
 
-    FiniteFunction function(min, max, "Outputs/data/MysteryData04113.png");
-
+    FiniteFunction function(min, max, "Outputs/data/Inv_X_Squared.png");
     // Plot function
     function.plotFunction();
-
     // Plot data
     function.plotData(data, 50, true);
+    // Print info
+    function.printInfo();
+
+    NormalDistributionFunction normalFunc(min, max, "Outputs/data/1/Normal.png", 2.0, 1.5);
+    normalFunc.plotFunction();
+    normalFunc.plotData(data, 50, true);
+    normalFunc.printInfo();
 
     return 0;
 }

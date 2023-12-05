@@ -47,3 +47,21 @@ protected:
 private:
   double invxsquared(double x); //The default functional form
 };
+
+class NormalDistributionFunction : public FiniteFunction{
+  
+public:
+  NormalDistributionFunction(); //Empty constructor
+  NormalDistributionFunction(double range_min, double range_max, std::string outfile, double mu=0.0, double sigma=1.0); //Variable constructor
+  double mu(); //Mean of the normal distribution
+  double sigma(); //Standard deviation of the normal distribution
+  void setMu(double mu);
+  void setSigma(double sigma);
+  virtual void printInfo(); //Dump parameter info about the current function
+  virtual double callFunction(double x); //Call the function with value x
+
+private:
+  double m_mu;
+  double m_sigma;
+  double normal(double x, double mu, double sigma);
+};
