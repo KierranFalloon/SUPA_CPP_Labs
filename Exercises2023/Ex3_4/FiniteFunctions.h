@@ -83,3 +83,27 @@ private:
   double m_gamma;
   double cauchy(double x, double gamma);
 };
+
+class NegativeCrystalBallDistribution : public FiniteFunction{
+
+public:
+  NegativeCrystalBallDistribution(); //Empty constructor
+  NegativeCrystalBallDistribution(double range_min, double range_max, std::string outfile, double xbar=0.0, double sigma=1.0, double alpha=1.0, double n=1.0); //Variable constructor
+  double alpha(); // Tail parameter
+  double n(); // Power of the tail
+  double xbar(); // Mean
+  double sigma(); // Width of the gaussian core
+  void setAlpha(double alpha);
+  void setN(double n);
+  void setxbar(double xbar);
+  void setSigma(double sigma);
+  virtual void printInfo(); // Dump parameter info about the current function
+  virtual double callFunction(double x); //Call the function with value x
+
+private:
+  double m_alpha;
+  double m_n;
+  double m_xbar;
+  double m_sigma;
+  double negativeCrystalBall(double x, double xbar, double sigma, double alpha, double n);
+};
