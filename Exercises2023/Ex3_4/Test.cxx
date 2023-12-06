@@ -7,46 +7,41 @@
 
 #include "FiniteFunctions.h"
 #include <iostream>
-#include <fstream>
 #include "HelperFunctions.h"
 #include "CustomFunctions.h"
 
+template <typename T>
+void processFunction(T& function, std::vector<double>& data, double min, double max) {
+  function.integral(1000);
+  function.plotFunction();
+  function.plotData(data, 50, true);
+  function.printInfo();
+}
+
 int main()
 {
-    // Read data from file
-    std::vector<double> data = read_file();
+  // Read data from file
+  std::vector<double> data = read_file();
 
-    // Find range of data
-    std::array<double,2> min_max = data_range(data);
-    float min = min_max[0];
-    float max = min_max[1];
+  // Find range of data
+  std::array<double,2> min_max = data_range(data);
+  float min = min_max[0];
+  float max = min_max[1];
 
-    FiniteFunction function(min, max, "Outputs/png/Inv_X_Squared.png");
-    function.integral(1000);
-    // Plot function
-    function.plotFunction();
-    // Plot data
-    function.plotData(data, 50, true);
-    // Print info
-    function.printInfo();
+  FiniteFunction function(min, max, "./Outputs/png/Inv-X-Squared.png");
+  processFunction(function, data, min, max);
 
-    NormalDistributionFunction normalFunc(min, max, "Outputs/png/Normal.png", 2.0, 1.5);
-    normalFunc.integral(1000);
-    normalFunc.plotFunction();
-    normalFunc.plotData(data, 50, true);
-    normalFunc.printInfo();
+  // mu, sigma
+  NormalDistributionFunction normalFunc(min, max, "./Outputs/png/Normal-Dist.png", 2.0, 1.5);
+  processFunction(normalFunc, data, min, max);
 
-    CauchyLorentzDistribution cauchyFunc(min, max, "Outputs/png/Cauchy-Lorentz.png", 2.0, 1.5);
-    cauchyFunc.integral(1000);
-    cauchyFunc.plotFunction();
-    cauchyFunc.plotData(data, 50, true);
-    cauchyFunc.printInfo();
+  // x0, gamma
+  CauchyLorentzDistribution cauchyFunc(min, max, "./Outputs/png/Cauchy-Lorentz.png", 2.0, 1.0);
+  processFunction(cauchyFunc, data, min, max);
 
-    NegativeCrystalBallDistribution crystalFunc(min, max, "Outputs/png/Negative-Crystal.png", 2.0, 1.5, 10, 3);
-    crystalFunc.integral(1000);
-    crystalFunc.plotFunction();
-    crystalFunc.plotData(data, 50, true);
-    crystalFunc.printInfo();
+  // xbar, sigma, alpha, n
+  NegativeCrystalBallDistribution crystalFunc(min, max, "./Outputs/png/Negative-Crystal.png", 2.0, 1.5, 2.0, 2.0);
+  processFunction(crystalFunc, data, min, max);
 
-    return 0;
-}
+  return 0;
+};
