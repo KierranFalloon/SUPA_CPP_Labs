@@ -11,4 +11,6 @@
 #include <array>
 
 std::vector<double> read_file();
-std::array<double,2> data_range(std::vector<double>);
+std::array<int,2> data_range(std::vector<double>);
+double get_mean(std::vector<double>);
+double stdev(std::vector<double>, double);

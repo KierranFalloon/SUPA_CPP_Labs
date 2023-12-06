@@ -8,7 +8,9 @@
 #include <fstream>
 #include <vector>
 #include <array>
+#include <cmath>
 
+// read file
 std::vector<double> read_file()
 {
 
@@ -18,12 +20,12 @@ std::vector<double> read_file()
 
   if (inputfile.fail() || !inputfile.is_open())
   { // If file cannot be opened, print error message and exit
-      std::cout << "Could not open file " + filepath + "" << std::endl;
-      exit(1);
+    std::cout << "Could not open file " + filepath + "" << std::endl;
+    exit(1);
   }
   else
   { // If file is opened successfully, print success message
-      std::cout << "File " + filepath + " opened successfully." << std::endl;
+    std::cout << "File " + filepath + " opened successfully." << std::endl;
   }
 
   std::vector<double> data; // File data: dynamic data structure of form [ [ x, y ], [ x, y ], ... ]
@@ -31,9 +33,8 @@ std::vector<double> read_file()
 
   while (getline(inputfile, line))
   { // Read file line by line
-
-      double x = std::stod(line); // convert string to double
-      data.push_back(x);          // add to data std::vector
+    double x = std::stod(line); // convert string to double
+    data.push_back(x);          // add to data std::vector
   }
 
   inputfile.close(); // Close file
@@ -45,22 +46,46 @@ std::vector<double> read_file()
   return data;
 }
 
-std::array<double,2> data_range(std::vector<double> data) {
-  std::array<double,2> data_range;
+// get integer bounds of the data
+std::array<int,2> data_range(std::vector<double> data) {
+  std::array<int,2> data_range;
   double min = data[0];
   double max = data[0];
   for (int i = 0; i < data.size(); i++)
   {
-      if (data[i] < min)
-      {
-          min = data[i];
-      }
-      if (data[i] > max)
-      {
-          max = data[i];
-      }
+    if (data[i] < min)
+    {
+      min = data[i];
+    }
+    if (data[i] > max)
+    {
+      max = data[i];
+    }
   }
-  data_range[0] = min;
-  data_range[1] = max;
+  // bounds slightly wider than data range
+  data_range[0] = std::floor(min) - 1;
+  data_range[1] = std::ceil(max) + 1;
   return data_range;
+}
+
+// return mean of data
+double get_mean(std::vector<double> data)
+{
+  double sum = 0;
+  for (int i = 0; i < data.size(); i++)
+  {
+    sum += data[i];
+  }
+  return sum / data.size();
+}
+
+// return standard deviation of data
+double stdev(std::vector<double> data, double mean_value)
+{
+  double sum = 0;
+  for (int i = 0; i < data.size(); i++)
+  {
+    sum += pow(data[i] - mean_value, 2);
+  }
+  return sqrt(sum / data.size());
 }
