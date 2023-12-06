@@ -6,6 +6,7 @@
 
 #include "FiniteFunctions.h"
 #include "CustomFunctions.h"
+#include <random>
 
 /*
 ###################
@@ -119,3 +120,52 @@ void NegativeCrystalBallDistribution::printInfo() {
   std::cout << "alpha: " << m_alpha << std::endl;
   std::cout << "n: " << m_n << std::endl;
 };
+
+/*
+###################
+//Metropolis-Hastings Algorithm
+// Initialised as a FiniteFunction class that takes input of a function, such that this->callFunction can be used.
+###################
+*/
+
+MetropolisHastings::~MetropolisHastings() {} // Destructor
+
+// Random number generator
+double MetropolisHastings::random(int min, int max) {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution<> dis(min, max);
+  return dis(gen);
+}
+
+// Random number generator with normal distribution
+double MetropolisHastings::random_normal(double mu, double sigma) {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::normal_distribution<> dis(mu, sigma);
+  return dis(gen);
+}
+
+// Metropolis-Hastings algorithm
+std::vector<double> MetropolisHastings::sample(int nSamples) {
+  std::vector<double> m_Samples;
+  double x = random(m_RMin, m_RMax); // Initial random x value
+
+  for (int i = 0; i < nSamples; i++) {
+    double y = random_normal(2.0, 2.5); // Random y value from normal distribution
+    double fx = m_Function->callFunction(x); // Call function to get f(x)
+    double fy = m_Function->callFunction(y); // Call function to get f(y)
+    double A = std::min(1.0, fy/fx); 
+    double T = random(0, 1);
+
+    if (T < A) { // Accept y
+      m_Samples.push_back(y);
+      x = y; // Set next x
+    }
+    else { // Reject y
+      x = x; // Don't change x
+    }
+  }
+
+  return m_Samples;
+}

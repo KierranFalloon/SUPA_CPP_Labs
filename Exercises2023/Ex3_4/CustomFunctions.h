@@ -51,3 +51,22 @@ private:
   double m_sigma;
   double negativeCrystalBall(double x, double xbar, double sigma, double alpha, double n);
 };
+
+class MetropolisHastings : public FiniteFunction{
+
+public:
+  MetropolisHastings() : FiniteFunction() {}; //Empty constructor
+  MetropolisHastings(FiniteFunction* function) : FiniteFunction() { //Variable constructor
+    m_Function = function; // Set function
+    setRangeMin(function->rangeMin()); // Unpack lower bound
+    setRangeMax(function->rangeMax()); // Unpack upper bound
+  }
+  ~MetropolisHastings(); //Destructor
+  std::vector<double> sample(int nSamples); // Sampling function
+
+private:
+  FiniteFunction* m_Function;
+  double random(int min, int max); // Uniform random number
+  double random_normal(double mu, double sigma); // Normal sampled random number
+
+};

@@ -63,8 +63,8 @@ std::array<int,2> data_range(std::vector<double> data) {
     }
   }
   // bounds slightly wider than data range
-  data_range[0] = std::floor(min) - 1;
-  data_range[1] = std::ceil(max) + 1;
+  data_range[0] = std::floor(min) - 2;
+  data_range[1] = std::ceil(max) + 2;
   return data_range;
 }
 
