@@ -11,17 +11,18 @@
 #include "CustomFunctions.h"
 
 template <typename T>
-void processFunction(T& function, std::vector<double>& data, double min, double max) {
-  function.integral(1000);
-  function.plotFunction();
-  function.plotData(data, 50, true);
-  function.printInfo();
+void processFunction(T& function, std::vector<double>& data) {
+  function.integral(1000); // Calculate integral using N intermediate sample points
+  function.plotFunction(); // Plot function
+  function.plotData(data, 50, true); // Plot data
+  function.printInfo(); // Dump info
 
   // Get Metropolis-Hasings samples and plot them on the same graph
-  MetropolisHastings metropolisFunc(&function, 10000);
-  metropolisFunc.printInfo();
-  std::vector<double> metropolisData = metropolisFunc.sample();
-  function.plotData(metropolisData, 100, false);
+  MetropolisHastings metropolisFunc(&function, 10000); // Create Metropolis func with nSample points
+  metropolisFunc.printInfo(); // Log info
+  
+  std::vector<double> metropolisData = metropolisFunc.sample(); // Gather samples 
+  function.plotData(metropolisData, 100, false); // Plot sampled points
 }
 
 int main()
@@ -37,19 +38,19 @@ int main()
   double standard_dev = stdev(data, mean);
 
   FiniteFunction function(min, max, "./Outputs/png/Inv-X-Squared.png");
-  processFunction(function, data, min, max);
+  processFunction(function, data);
 
   // mu, sigma
   NormalDistributionFunction normalFunc(min, max, "./Outputs/png/Normal-Dist.png", mean, standard_dev);
-  processFunction(normalFunc, data, min, max);
+  processFunction(normalFunc, data);
 
   // x0, gamma
   CauchyLorentzDistribution cauchyFunc(min, max, "./Outputs/png/Cauchy-Lorentz.png", mean, 0.80);
-  processFunction(cauchyFunc, data, min, max);
+  processFunction(cauchyFunc, data);
 
   // xbar, sigma, alpha, n
   NegativeCrystalBallDistribution crystalFunc(min, max, "./Outputs/png/Negative-Crystal.png", mean, standard_dev, 2.0, 2.0);
-  processFunction(crystalFunc, data, min, max);
+  processFunction(crystalFunc, data);
 
   return 0;
 };
