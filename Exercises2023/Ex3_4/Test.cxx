@@ -18,9 +18,10 @@ void processFunction(T& function, std::vector<double>& data, double min, double 
   function.printInfo();
 
   // Get Metropolis-Hasings samples and plot them on the same graph
-  MetropolisHastings metropolisFunc(&function);
-  std::vector<double> metropolisData = metropolisFunc.sample(10000);
-  function.plotData(metropolisData, 50, false);
+  MetropolisHastings metropolisFunc(&function, 10000);
+  metropolisFunc.printInfo();
+  std::vector<double> metropolisData = metropolisFunc.sample();
+  function.plotData(metropolisData, 100, false);
 }
 
 int main()

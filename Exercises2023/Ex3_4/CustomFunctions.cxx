@@ -14,6 +14,7 @@
 ###################
 */
 
+double NormalDistributionFunction::getMean(){return m_mu;};
 
 /*
 ###################
@@ -47,6 +48,7 @@ void NormalDistributionFunction::printInfo() {
 ###################
 */
 
+double CauchyLorentzDistribution::getMean(){return m_x0;};
 
 /*
 ###################
@@ -80,6 +82,7 @@ void CauchyLorentzDistribution::printInfo() {
 ###################
 */
 
+double NegativeCrystalBallDistribution::getMean(){return m_xbar;};
 
 /*
 ###################
@@ -139,20 +142,28 @@ double MetropolisHastings::random(int min, int max) {
 }
 
 // Random number generator with normal distribution
-double MetropolisHastings::random_normal(double mu, double sigma) {
+double MetropolisHastings::random_normal(double norm_mu, double norm_sigma) {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::normal_distribution<> dis(mu, sigma);
+  std::normal_distribution<> dis(norm_mu, norm_sigma);
   return dis(gen);
 }
 
+//Print
+void MetropolisHastings::printInfo() {
+  std::cout << std::endl;
+  std::cout << "Sampling function with " << nSamples << " points with Metropolis-Hastings Algorithm with between " << m_Function->rangeMin() << " and " << m_Function->rangeMax() << std::endl;
+};
+
 // Metropolis-Hastings algorithm
-std::vector<double> MetropolisHastings::sample(int nSamples) {
+std::vector<double> MetropolisHastings::sample() {
   std::vector<double> m_Samples;
   double x = random(m_RMin, m_RMax); // Initial random x value
 
-  for (int i = 0; i < nSamples; i++) {
-    double y = random_normal(2.0, 2.5); // Random y value from normal distribution
+  double norm_mean = m_Function->getMean();  // Defaults to 0 for FiniteFunction.
+
+  while (m_Samples.size() < nSamples) {
+    double y = random_normal(norm_mean, 2.5); // Random y value from normal distribution
     double fx = m_Function->callFunction(x); // Call function to get f(x)
     double fy = m_Function->callFunction(y); // Call function to get f(y)
     double A = std::min(1.0, fy/fx); 
