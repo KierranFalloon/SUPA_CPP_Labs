@@ -61,6 +61,7 @@ public:
     setRangeMin(m_Function->rangeMin()); // Unpack lower bound
     setRangeMax(m_Function->rangeMax()); // Unpack upper bound
     nSamples = samples;
+    m_norm_mean = m_Function->getMean();
   }
   ~MetropolisHastings(); //Destructor
   virtual void printInfo(); // Print Metropolis info
@@ -69,7 +70,8 @@ public:
 private:
   FiniteFunction* m_Function;
   int nSamples;
+  double m_norm_mean;
   double random(int min, int max); // Uniform random number
-  double random_normal(double mu, double sigma); // Normal sampled random number
+  double random_normal(double norm_sigma); // Normal sampled random number
 
 };

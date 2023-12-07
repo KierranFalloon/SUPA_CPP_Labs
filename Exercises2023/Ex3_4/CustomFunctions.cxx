@@ -142,10 +142,10 @@ double MetropolisHastings::random(int min, int max) {
 }
 
 // Random number generator with normal distribution
-double MetropolisHastings::random_normal(double norm_mu, double norm_sigma) {
+double MetropolisHastings::random_normal(double norm_sigma) {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::normal_distribution<> dis(norm_mu, norm_sigma);
+  std::normal_distribution<> dis(m_norm_mean, norm_sigma);
   return dis(gen);
 }
 
@@ -160,10 +160,8 @@ std::vector<double> MetropolisHastings::sample() {
   std::vector<double> m_Samples;
   double x = random(m_RMin, m_RMax); // Initial random x value
 
-  double norm_mean = m_Function->getMean();  // Defaults to 0 for FiniteFunction.
-
   while (m_Samples.size() < nSamples) {
-    double y = random_normal(norm_mean, 2.5); // Random y value from normal distribution
+    double y = random_normal(2.5); // Random y value from normal distribution with standard deviation
     double fx = m_Function->callFunction(x); // Call function to get f(x)
     double fy = m_Function->callFunction(y); // Call function to get f(y)
     double A = std::min(1.0, fy/fx); 
