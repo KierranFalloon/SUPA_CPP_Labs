@@ -1,14 +1,14 @@
 /**
  * @file HelperFunctions.h
  * @author Kierran Falloon (kierran.falloon@strath.ac.uk)
- * @date 5-12-2023
+ * @date 05-12-2023
  */
-
-#pragma once
 
 #include <iostream>
 #include <vector>
 #include <array>
+
+#pragma once
 
 std::vector<double> read_file();
 std::array<int,2> data_range(std::vector<double>);

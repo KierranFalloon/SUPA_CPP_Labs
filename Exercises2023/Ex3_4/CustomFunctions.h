@@ -1,12 +1,12 @@
 /**
  * @file CustomFunctions.h
  * @author Kierran Falloon (kierran.falloon@strath.ac.uk)
- * @date 5-12-2023
+ * @date 05-12-2023
  */
 
 #include "FiniteFunctions.h"
 
-#pragma once //Replacement for IFNDEF
+#pragma once
 
 class NormalDistributionFunction : public FiniteFunction{
   
